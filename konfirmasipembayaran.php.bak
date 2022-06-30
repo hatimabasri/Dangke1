@@ -1,0 +1,49 @@
+<?php
+session_start();
+include 'koneksi.php';
+ ?>
+ <!DOCTYPE html>
+ <html>
+   <head>
+     <meta charset="utf-8">
+     <title>AW Computershop</title>
+     <link rel="icon" href="icon.png">
+     <link href="./vendor/bootstrap/css/bootstrap.css" rel="stylesheet">
+     <link href="./css/shop-homepage.css" rel="stylesheet">
+   </head>
+   <body>
+<?php include 'navbar.php'; ?>
+<?php
+$keyword = $_GET['keyword'];
+$ambil = $koneksi->query("SELECT * FROM pembelian JOIN pelanggan
+          ON pembelian.id_pelanggan = pelanggan.id_pelanggan
+          WHERE pembelian.id_pembelian ='$keyword' AND status_pembelian='Disetujui'");
+$detail = $ambil->fetch_assoc();
+ ?>
+
+     <section class="konten" >
+       <div class="container">
+         <h1><center>ID Pembayaran <?php echo $keyword; ?></center></h1>
+         <hr>
+         <?php if ($detail) { ?>
+             <div class="alert alert-info">
+              <p>
+              <center>
+               <strong>SELAMAT PEMBAYARAN ANDA TELAH DISETUJUI</strong> <hr>
+               Pelanggan Atas Nama <?php echo $detail['nama_pelanggan']; ?><br>
+               Total Pembelian Rp. <?php echo number_format($detail['total_pembelian']); ?> <br>
+               Paket Anda Akan Segera Dikirimkan Ke <?php echo $detail['alamat_pelanggan']; ?>
+             </p>
+         </div>
+     <?php } else { ?>
+       <div class="alert alert-danger">
+        <p>
+        <center>
+         <strong>ID Pembayaran Anda Tidak Ditemukan</strong>
+       </p>
+     <?php } ?>
+       </div>
+     </section>
+
+   </body>
+ </html>
